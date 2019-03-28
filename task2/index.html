@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>shmaya</title>
+    <style>
+       
+       body{
+           background-color: rgb(235, 243, 255)
+       }
+
+        .form{
+            font-weight: 900;
+            color:black;
+            text-align: center;
+            opacity:0.8;
+            height:150px ;
+            /* background-color: rgb(213, 232, 245); */
+            margin: 0;   
+        }
+
+        button{
+            background-image:linear-gradient(-90deg, rgb(28, 48, 233),rgb(111, 238, 238)) ;
+            height: 25px;
+            width: 50px;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: 600;
+            
+        }
+    
+        .Cdiv{
+           margin: 20px;
+           border: 2px solid black;
+           background-position: center; 
+           background-color: rgb(173, 216, 245);
+           line-height: 2;
+           font-weight:900;
+           font-size: 20px;
+           display: flex;
+           margin: 20px 100px;
+           padding: 20px;
+           padding-bottom: 50px;
+           position: relative;         
+        }
+
+        .flag{
+            position: absolute;
+            top: 0;
+            right: 0;
+            
+        }
+
+        img{
+            height: 230px;
+            width: 500px;               
+        }
+    </style>
+</head>
+<body>
+     
+    <div class="form">
+    <h1>COUNTRIES INFO</h1>
+    COUNTRY: 
+    <input class="name" type="text">
+    <button onclick="oneC();">GET</button>
+    <button onclick="allC();">ALL</button>
+    </div>
+    </div>
+    <hr>
+    <div class="erea"></div>
+    
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+<script>
+    var container=document.querySelector(".erea");
+    
+    function allC(){
+        var url = "https://restcountries.eu/rest/v2/all"; 
+        fetch (url);
+    }
+
+    function oneC(){
+        var url = "https://restcountries.eu/rest/v2/name/";
+        url +=   $(".name").val();
+
+        const cb=function(){
+        $(".name").val("");
+        $(".name").focus();  
+      }
+        fetch (url,cb);
+    }
+    
+    function fetch(url,cb=null){
+    
+       const pxhr = {}
+       pxhr.type = "get";
+       pxhr.url = url;
+    
+    $.ajax(pxhr)
+    .done(function (result, status, xhr) {
+       if(cb!=null){
+       cb();
+     }
+       var oC=JSON.parse(xhr.responseText)
+       for(var i=0;i<=oC.length;i++){
+       var v = document.createElement("div");
+       v.classList.add("Cdiv"); 
+       v.innerHTML = `name:${oC[i].name},<br>
+       top level domain:${oC[i].topLevelDomain},<br>
+       capital:${oC[i].capital},<br>
+       currencies:${oC[i].currencies[0].code},<div class="flag"><img src="${oC[i].flag}" ></div>`
+       container.appendChild(v);
+     }
+     })
+        
+        .fail( function (xhr, status, error) {
+         alert("Error!!!", error)
+
+     })
+
+}
+
+</script>
+</html>
